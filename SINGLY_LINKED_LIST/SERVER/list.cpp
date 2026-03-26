@@ -1,5 +1,5 @@
 #include "list.hpp"
-
+#include "IList.hpp"
 singly_linked_list::singly_linked_list()
 {
     p_list = get_node(0);
@@ -78,6 +78,8 @@ singly_linked_list& singly_linked_list::operator=(const singly_linked_list& othe
 
 singly_linked_list::~singly_linked_list()
 {
+    if(p_list == nullptr) 
+        return;
     node_t* run = nullptr;
     node_t* run_next = nullptr;
     run = p_list;
@@ -156,7 +158,7 @@ status_t singly_linked_list::insert_before(data_t existing_data , data_t new_dat
     return (SUCCESS);
 }
 
-status_t singly_linked_list::get_start(int& start_data)const
+status_t singly_linked_list::get_start(data_t& start_data)const
 {
     if(is_list_empty())
     {
@@ -166,7 +168,7 @@ status_t singly_linked_list::get_start(int& start_data)const
     return (SUCCESS);
 }
 
-status_t singly_linked_list::get_end(int& end_data)const
+status_t singly_linked_list::get_end(data_t& end_data)const
 {
     node_t* run = nullptr;
     if(is_list_empty())
@@ -183,7 +185,7 @@ status_t singly_linked_list::get_end(int& end_data)const
     return (SUCCESS);
 }
 
-status_t singly_linked_list::pop_start(int& start_data)
+status_t singly_linked_list::pop_start(data_t & start_data)
 {
     node_t* delete_node = nullptr;
     node_t* delete_previous = nullptr;
@@ -201,7 +203,7 @@ status_t singly_linked_list::pop_start(int& start_data)
     return (SUCCESS);
 }
 
-status_t singly_linked_list::pop_end(int& end_data)
+status_t singly_linked_list::pop_end(data_t& end_data)
 {
     node_t* run = nullptr;
     node_t* run_previous = nullptr;
@@ -218,7 +220,7 @@ status_t singly_linked_list::pop_end(int& end_data)
         run = run->next;
     }
     end_data = run->data;
-    run_previous->next = NULL;
+    run_previous->next = nullptr;
     delete run;
     run = nullptr;
     return (SUCCESS);
@@ -258,7 +260,7 @@ status_t singly_linked_list::remove_end()
         run_previous = run;
         run = run->next;
     }
-    run_previous->next = NULL;
+    run_previous->next = nullptr;
     delete run;
     run = nullptr;
     return (SUCCESS);
@@ -280,7 +282,7 @@ status_t singly_linked_list::remove_data(data_t r_data)
         run_previous = run;
         run = run->next;
     }
-    if(run == 0)
+    if(run == nullptr)
     {
         return (LIST_DATA_NOT_FOUND);
     }
@@ -307,7 +309,7 @@ status_t singly_linked_list::find_data(data_t f_data)const
 
 status_t singly_linked_list::is_list_empty()const
 {
-    if(p_list->next == 0)
+    if(p_list->next == nullptr)
     {
         return TRUE;
     }
@@ -327,10 +329,10 @@ len_t singly_linked_list::get_list_length()const
     return len;
 }
 
-void singly_linked_list::show_list(const char* msg)const
+void singly_linked_list::show_list(const std::string& msg)const
 {
     node_t* run = nullptr;
-    if(msg)
+    if(msg != "")
     {
         std::cout<<msg<<std::endl;
     }
@@ -365,25 +367,31 @@ node_t* singly_linked_list::search_node(data_t s_data)const
 
 }
 
-std::ostream& operator<<(std::ostream& os , const singly_linked_list& other)
+// std::ostream& operator<<(std::ostream& os , const singly_linked_list& other)
+// {
+//     node_t* run = nullptr;
+//     os<<"\n[START] -> ";
+
+//     run = other.p_list->get_next();
+//     while(run)
+//     {   
+//         os<<run->get_data()<<" -> ";
+//         run = run->get_next();
+//     }
+//     os<<"[END]\n"<<std::endl;
+//     return os;
+// }
+
+// data_t node::get_data()const{
+//     return this->data;
+// }
+
+// node_t* node::get_next()const{
+//     return this->next;
+// }
+
+
+IList* IList::getListInstance()
 {
-    node_t* run = nullptr;
-    os<<"\n[START] -> ";
-
-    run = other.p_list->get_next();
-    while(run)
-    {   
-        os<<run->get_data()<<" -> ";
-        run = run->get_next();
-    }
-    os<<"[END]\n"<<std::endl;
-    return os;
-}
-
-data_t node::get_data()const{
-    return this->data;
-}
-
-node_t* node::get_next()const{
-    return this->next;
+    return new singly_linked_list();
 }
